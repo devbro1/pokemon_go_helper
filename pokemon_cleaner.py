@@ -7,8 +7,8 @@ def main():
     pokemon = {}
     pokemon['name'] = screen_reader.readName()
     pokemon['cp'] = screen_reader.readCP()
-    # pokemon.hp = screen_reader.readHP()
-    #pokemon.attack = ScreenController.readIVs
+    pokemon['hp'] = screen_reader.readHP()
+    pokemon['ivs'] = screen_reader.readIVs()
 
 
     #pokemon_details = PokemonDatabase.findPokemon(name:pokemon.name)
