@@ -44,7 +44,9 @@ class ScreenController:
     def readHP(self):
         image = self.readScreenShots(color = (120,138,127,255),color_tolarence=20)
         image.save("hp.jpg")
-        cropped_img = image.crop((298, 1164, 298+520, 1164+50))
+        x=430
+        y=1220
+        cropped_img = image.crop((x,y, x+210, y+50))
         cropped_img.save("hp_cropped.jpg")
         rc = re.sub(r'\s', '', pytesseract.image_to_string(cropped_img))
 
