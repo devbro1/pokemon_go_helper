@@ -1,3 +1,5 @@
-# pokemon_go_helper2
+# python remove_favorites.py
+go to pokemon list, show only favorite
 
-basically a set of node commands to help decide what pokemons to keep
+# python send_gift.py
+
