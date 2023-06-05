@@ -1,4 +1,4 @@
-name,cp,hp,attack,defense,stamina
+name,cp,hp,attack,defense,health
 Venusaur,1546,121,15,15,13
 Charmandet,,68,10,15,15
 Charmeleor,936,98,14,15,14
@@ -1576,7 +1576,8 @@ Chespin,60,102,4,15,8
 Chespin,458,84,14,11,15
 Chespin,211,56,15,12,15
 Quilladin,912,73,10,14,9
-Chesnaught,1491,123,12,14,14Fennekin,68,95,15,0,15
+Chesnaught,1491,123,12,14,14
+Fennekin,68,95,15,0,15
 Fennekin,36,92,0,0,0
 Fennekin,65,84,1,3,12
 Fennekin,342,61,5,14,8

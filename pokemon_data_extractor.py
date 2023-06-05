@@ -10,7 +10,7 @@ def getPokemon(screen_reader):
     pokemon['name'] = screen_reader.readName()
     pokemon['cp'] = screen_reader.readCP()
     pokemon['hp'] = screen_reader.readHP()
-    (pokemon['attack'],pokemon['defense'],pokemon['stamina']) = screen_reader.readIVs()
+    (pokemon['attack'],pokemon['defense'],pokemon['health']) = screen_reader.readIVs()
 
     #pokemon_details = PokemonDatabase.findPokemon(name:pokemon.name)
     #pokemon.family = pokemon_details.family
@@ -28,8 +28,8 @@ def main():
         screen_reader.takeScreenshot()
         pokemon = getPokemon(screen_reader)
         print(pokemon)
-        #name,cp,hp,attack,defense,stamina
-        writer.writerow((pokemon['name'],pokemon['cp'],pokemon['hp'],pokemon['attack'],pokemon['defense'],pokemon['stamina']))
+        #name,cp,hp,attack,defense,health
+        writer.writerow((pokemon['name'],pokemon['cp'],pokemon['hp'],pokemon['attack'],pokemon['defense'],pokemon['health']))
         screen_reader.gotoNext()
 
         file.close()
