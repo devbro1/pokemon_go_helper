@@ -3,6 +3,7 @@ from screen_controller import ScreenController
 import json
 import csv
 import time
+import sqlite3
 
 
 def getPokemon(screen_reader):
@@ -20,9 +21,14 @@ def getPokemon(screen_reader):
 
 def main():
     screen_reader = ScreenController()
-    for i in range(1900):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute('''DELETE FROM pokemons;''')
+
+
+    for i in range(2300):
         #current_time = time.time()
-        file = open('pokemons.csv', 'a', newline='')
+        file = open('pokemons.csv', 'w', newline='')
         writer = csv.writer(file)
         #print("Time passed:", time.time() - current_time, "seconds")
         screen_reader.takeScreenshot()
@@ -30,9 +36,13 @@ def main():
         print(pokemon)
         #name,cp,hp,attack,defense,health
         writer.writerow((pokemon['name'],pokemon['cp'],pokemon['hp'],pokemon['attack'],pokemon['defense'],pokemon['health']))
+        cursor.execute("INSERT INTO pokemons (name, cp, hp, attack, defense, health) VALUES (?, ?, ?, ?, ?, ?)", (pokemon['name'],pokemon['cp'],pokemon['hp'],pokemon['attack'],pokemon['defense'],pokemon['health']))
+
         screen_reader.gotoNext()
 
         file.close()
+
+
 
 
 

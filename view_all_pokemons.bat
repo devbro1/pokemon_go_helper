@@ -1,4 +1,4 @@
-for /l %%x in (1, 1, 2000) do (
+for /l %%x in (1, 1, 2400) do (
 	adb shell input swipe 930 1485 100 1485 100
-	timeout 5
+	timeout 3
 )
