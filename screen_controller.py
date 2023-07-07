@@ -3,21 +3,25 @@ import subprocess
 import pytesseract
 import re
 import time
+from pokemon import Pokemon
 
 
 class ScreenController:
     def __init__(self):
         pass
 
-    def takeScreenshot(self):
+    def takeScreenshot(self, path = 'screenshot.png'):
         subprocess.call(['adb', 'shell', 'screencap', '-p', '/sdcard/screenshot.png'])
-        subprocess.call(['adb', 'pull', '/sdcard/screenshot.png', 'screenshot.png'])
+        subprocess.call(['adb', 'pull', '/sdcard/screenshot.png', path])
 
-        self.image = Image.open('screenshot.png')
+        self.image = Image.open(path)
         return self.image
 
     def getScreenshot(self):
         return self.image
+    
+    def setScreenshot(self, image):
+        self.image = image
     
     def takeScreenshot_test(self):
 
@@ -39,12 +43,12 @@ class ScreenController:
 
     def readName(self):
         image = self.getScreenshot()
-        image = image.crop((330, 1039, 720, 1108))
-        image = self.readScreenShots(color = (77,105,107,255),image=image,color_tolarence=7)
-        #image.save("name.jpg")
+        image = image.crop((330, 1039, 730, 1118))
+        image = self.readScreenShots(color = (77,105,107,255),image=image,color_tolarence=10)
         #cropped_img.save("name_cropped.jpg")
-        rc = re.sub(r'\s', '', pytesseract.image_to_string(image))
-
+        rc = re.sub(r'\s', '', pytesseract.image_to_string(image,config=r'--oem 1 --psm 7'))
+        
+        image.save("name"+rc+".jpg")
         return rc
 
     def readHP(self):
@@ -63,6 +67,11 @@ class ScreenController:
             rc = '???'
 
         return rc
+
+    def readFullScreen(self):
+        image = self.getScreenshot()
+        image = self.readScreenShots(color = (255,255,255), image=image)
+        return pytesseract.image_to_string(image)
 
     def readCP(self):
         image = self.getScreenshot()
@@ -114,17 +123,32 @@ class ScreenController:
 
         return (attack,defense,hp)
 
+    def toggleFavorite(self):
+        subprocess.call(['adb', 'shell', 'input', 'tap', '970','330']) #open menu
 
-    def gotoNext(self):
-        subprocess.call(['adb', 'shell', 'input', 'swipe', '930','1485','100','1485','100'])
+    def gotoNext(self,speed=500):
+        x = '1485'
+        subprocess.call(['adb', 'shell', 'input', 'swipe', '930',x,'100',x,str(speed)])
         time.sleep(1)
+        
+    def goBack(self):
+        subprocess.call(['adb', 'shell', 'input', 'tap', '540','2150']) #open menu
 
     def tagDelete(self):
         subprocess.call(['adb', 'shell', 'input', 'tap', '920','2130']) #open menu
+        time.sleep(1)
         subprocess.call(['adb', 'shell', 'input', 'tap', '920','1350']) #tags
+        time.sleep(1)
         subprocess.call(['adb', 'shell', 'input', 'tap', '920','770']) #delete
+        time.sleep(1)
         subprocess.call(['adb', 'shell', 'input', 'tap', '535','1950']) #done
+        time.sleep(1)
+    
+    def getPokemon(self):
+        details = {}
+        details['name'] = self.readName()
+        details['cp'] = self.readCP()
+        details['hp'] = self.readHP()
+        (details['attack'],details['defense'],details['health']) = self.readIVs()
         
-
-
-            
+        return Pokemon(details)

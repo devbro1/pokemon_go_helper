@@ -1,5 +1,6 @@
 import json
-
+import math
+    
 class Pokedex:
     _instance = None
 
@@ -14,10 +15,14 @@ class Pokedex:
 
         with open('multiplier.json', 'r') as file:
             self.multiplier = json.load(file)
+            
+        self.prodstats = {}
 
     def findPokemon(self,name):
         for p in self.data:
             if p['name'] == name:
+                return p
+            elif 'alternative_names' in p and name in p['alternative_names']:
                 return p
         return None
 
@@ -25,7 +30,7 @@ class Pokedex:
         for multiplier in self.multiplier:
             if(multiplier['level'] == level):
                 return multiplier['multiplier']
-        return 0
+        return 'AAA'
         
 
     def calculateCP(self,attack,defense,health,level):
@@ -33,33 +38,26 @@ class Pokedex:
         cp = (pow(attack, 1) * pow(defense, 0.5) * pow(health, 0.5) * pow(multiplier, 2)) / 10
         return cp
 
-    def getProdStats(self,name):
+    def getProdStats(self,name,maxCP):
         rc = []
+        if(name in self.prodstats and maxCP in self.prodstats[name]):
+            return self.prodstats[name][maxCP]
         p1 = self.findPokemon(name)
 
-        for level_index in range(100):
-            level = level_index / 2.0
-            for attack in range(16):
-                for defense in range(16):
-                    for health in range(16):
-                        cp = self.calculateCP(attack,defense,health,level)
-                        
-                        ind_attack = p1['stat']['atk'] + attack
-                        ind_defense = p1['stat']['def'] + defense
-                        ind_health = p1['stat']['sta'] + health
-                        
-                        stat_prod = ind_attack * ind_defense * ind_health
-                        rc.append({'name': name ,'level':level,'attack':attack,'defense': defense, 'health':health,'stat_prod': stat_prod})
+        for attack in range(16):
+            for defense in range(16):
+                for health in range(16):
+                    best = self.getBest(name,maxCP,attack,defense,health)
+                    rc.append(best)
+        
+        if(not name in self.prodstats):
+            self.prodstats[name] = {}
+        self.prodstats[name][maxCP] = rc
         return rc
     
     def getProdStatMax(self,name,maxCP):
-        matrix = self.getProdStats(name)
-        rc = matrix[0]
-        
-        for m in matrix:
-            if(m['stat_prod'] > rc['stat_prod']):
-                rc = m
-        
+        rc = self.getProdStats(name,maxCP)
+        rc = sorted(rc,key=lambda x: -x['stat_prod'])
         return rc
     
     def getFamilyMembers(self,name):
@@ -82,20 +80,23 @@ class Pokedex:
         rc = {'stat_prod':0}
         
         for member in family_members:
-            for l in range(100):
+            for l in range(2,100):
                 level = l / 2.0
-                cp = self.calculateCP(attack,defense,health,level)
+                multiplier = self.getMultiplier(level)
+                
+                ind_attack = member['stats']['atk'] + attack
+                ind_defense = member['stats']['def'] + defense
+                ind_health = member['stats']['sta'] + health
+                
+                cp = self.calculateCP(ind_attack,ind_defense,ind_health,level)
                 
                 if(maxCP < cp):
                     break
                 
-                ind_attack = member['stat']['atk'] + attack
-                ind_defense = member['stat']['def'] + defense
-                ind_health = member['stat']['sta'] + health
-                
-                stat_prod = ind_attack * ind_defense * ind_health
+                stat_prod = (ind_attack * multiplier) * (ind_defense * multiplier)  * (ind_health * multiplier)
+
                 if(stat_prod > rc['stat_prod']):
-                    rc = {'stat_prod': stat_prod, 'level': level, 'family_member': member}
+                    rc = {'stat_prod': stat_prod, 'level': level, 'family_member': member, 'cp': cp, 'attack':attack,'defense':defense,'health': health}
         
         return rc
         

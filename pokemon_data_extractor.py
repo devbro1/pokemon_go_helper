@@ -1,9 +1,6 @@
+# purpose: to extract data from the game one screenshot at a time and/or through auto-swipes plus pokegenie
 from screen_controller import ScreenController
-#from pokemon_database import PokemonDatabase
-import json
-import csv
 import time
-
 
 def getPokemon(screen_reader):
     pokemon = {}
@@ -12,28 +9,14 @@ def getPokemon(screen_reader):
     pokemon['hp'] = screen_reader.readHP()
     (pokemon['attack'],pokemon['defense'],pokemon['health']) = screen_reader.readIVs()
 
-    #pokemon_details = PokemonDatabase.findPokemon(name:pokemon.name)
-    #pokemon.family = pokemon_details.family
-
     return pokemon
-
 
 def main():
     screen_reader = ScreenController()
-    for i in range(1900):
-        #current_time = time.time()
-        file = open('pokemons.csv', 'a', newline='')
-        writer = csv.writer(file)
-        #print("Time passed:", time.time() - current_time, "seconds")
-        screen_reader.takeScreenshot()
-        pokemon = getPokemon(screen_reader)
-        print(pokemon)
-        #name,cp,hp,attack,defense,health
-        writer.writerow((pokemon['name'],pokemon['cp'],pokemon['hp'],pokemon['attack'],pokemon['defense'],pokemon['health']))
+    for i in range(1500,2350):
+        screen_reader.takeScreenshot( 'screenshots\\pokemon_' + str(i) + '.png')
+        print("current index: " + str(i))
         screen_reader.gotoNext()
-
-        file.close()
-
-
+        time.sleep(5) # use less time if you do not want to pokegenie
 
 main()

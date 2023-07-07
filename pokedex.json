@@ -10095,6 +10095,7 @@
         "id": "darmanitan_standard",
         "dexNumber": 555,
         "name": "Darmanitan (Standard)",
+        "alternative_names": ["Darmanitan"],
         "stats": {
             "atk": 263,
             "def": 114,
@@ -12813,6 +12814,7 @@
         "id": "avalugg",
         "dexNumber": 713,
         "name": "Avalugg",
+        "alternative_names": ["Avalugeg"],
         "stats": {
             "atk": 196,
             "def": 240,
@@ -12824,6 +12826,7 @@
             "stage": 2
         }
     },
+
     {
         "id": "avalugg_hisuian",
         "dexNumber": 713,
