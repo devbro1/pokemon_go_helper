@@ -6,8 +6,8 @@ screen_reader = ScreenController()
 
 for i in range(100):
     
-    screen_reader.takeScreenshot()
-    print(screen_reader.readFullScreen())
+    # screen_reader.takeScreenshot()
+    # print(screen_reader.readFullScreen())
     
     #hold on first one
     subprocess.call(['adb', 'shell', 'input', 'swipe', '280', '790', '280', '790', '500'])

@@ -152,3 +152,11 @@ class ScreenController:
         (details['attack'],details['defense'],details['health']) = self.readIVs()
         
         return Pokemon(details)
+    
+    def pressFight(button=1):
+        if(button==1):
+            subprocess.call(['adb', 'shell', 'input', 'tap', '520','2050']) #middle
+        elif(button==2):
+            subprocess.call(['adb', 'shell', 'input', 'tap', '330','2050']) #left
+        elif(button==3):
+            subprocess.call(['adb', 'shell', 'input', 'tap', '710','2050']) #right
