@@ -1,5 +1,6 @@
 from screen_controller import ScreenController
 import time
+import sqlite3
 
 def getPokemon(screen_reader):
     pokemon = {}
