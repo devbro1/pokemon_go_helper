@@ -1,6 +1,7 @@
 from screen_controller import ScreenController
 import time
 import sqlite3
+import os
 
 def getPokemon(screen_reader):
     pokemon = {}
@@ -13,8 +14,12 @@ def getPokemon(screen_reader):
 
 def main():
     screen_reader = ScreenController()
-    for i in range(0,2350):
-        screen_reader.takeScreenshot( 'screenshots\\pokemon_' + str(i) + '.png')
+    for i in range(0,1600):
+        current_name =  'screenshots\\pokemon_' + str(i) + '.png'
+        screen_reader.takeScreenshot(current_name)
+        # pokemon = screen_reader.getPokemon()
+        # new_name = 'screenshots\\' + pokemon['name'] + '_' + pokemon['cp'] + '.png'
+        # os.rename(current_name, new_name)
         print("current index: " + str(i))
         screen_reader.gotoNext(100)
         time.sleep(2)

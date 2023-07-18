@@ -48,7 +48,7 @@ class ScreenController:
         #cropped_img.save("name_cropped.jpg")
         rc = re.sub(r'\s', '', pytesseract.image_to_string(image,config=r'--oem 1 --psm 7'))
         
-        image.save("name"+rc+".jpg")
+        # image.save("name"+rc+".jpg")
         return rc
 
     def readHP(self):
@@ -86,15 +86,18 @@ class ScreenController:
     def readIV(self,image):
         #xs = [ 2, 26, 46, 74, 99, 128, 146, 167, 193, 219, 247, 263, 290, 312, 338,352 ]
         xs = [350,338,312,290,263,247,219,193,167,146,128,99,74,46,26,2]
+        xs.reverse()
+        # print("BBBBBBBBBBBBBB")
         for i,x in enumerate(xs):
             pixel = image.getpixel((x,10))
+            # print("A" + str(i) + " " + str(x))
 
             if pixel == (212,133,124,255):
                 return 15
-            elif pixel == (225, 151, 60, 255):
-                return 16-i
+            elif pixel == (226, 226, 226, 255):
+                return i
 
-        return 0
+        return -1
         raise Exception("Could not figure out IV")
 
     def readIVs(self):
@@ -153,10 +156,20 @@ class ScreenController:
         
         return Pokemon(details)
     
-    def pressFight(button=1):
+    def pressFight(self, button=1):
         if(button==1):
             subprocess.call(['adb', 'shell', 'input', 'tap', '520','2050']) #middle
         elif(button==2):
             subprocess.call(['adb', 'shell', 'input', 'tap', '330','2050']) #left
         elif(button==3):
             subprocess.call(['adb', 'shell', 'input', 'tap', '710','2050']) #right
+
+    def readSelectCount(self):
+        image = self.getScreenshot()
+        image = image.crop((300, 300, 730, 350))
+        image = self.readScreenShots(color = (77,105,107,255),image=image,color_tolarence=50)
+        image.save("screen_list_cropped.png")
+        rc = re.sub(r'\s', '', pytesseract.image_to_string(image,config=r'--oem 1 --psm 7'))
+        rc = rc.replace('Q(','').replace(')','')
+        
+        return int(rc)

@@ -2,7 +2,7 @@ import subprocess
 from screen_controller import ScreenController
 import time
 
-text = "Lopunny&CP1115&HP102"
+text = "Ludicolo&CP29&HP18,Lotad&CP23&HP22,Lotad&CP277&HP76,Lotad&CP282&HP80,Lotad&CP395&HP86"
 
 
 
@@ -21,6 +21,10 @@ for selector in text.split(','):
     
     subprocess.call(['adb', 'shell', 'input', 'text', selector.replace('&','\&') + "\n"])
     time.sleep(1)
+    
+    screen_reader.takeScreenshot('screen_list.png')
+    if(screen_reader.readSelectCount() != 1):
+        continue
 
     # # select pokemon
     subprocess.call(['adb', 'shell', 'input', 'tap', '200', '915'])
