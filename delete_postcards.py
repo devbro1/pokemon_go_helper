@@ -11,21 +11,22 @@ for i in range(100):
     
     #hold on first one
     subprocess.call(['adb', 'shell', 'input', 'swipe', '280', '790', '280', '790', '500'])
-    time.sleep(1)
+    time.sleep(0.3)
     subprocess.call(['adb', 'shell', 'input', 'tap', '790', '790'])
-    time.sleep(1)
+    time.sleep(0.3)
     
-    subprocess.call(['adb', 'shell', 'input', 'tap', '280', '1280'])
-    time.sleep(1)
-    subprocess.call(['adb', 'shell', 'input', 'tap', '790', '1280'])
-    time.sleep(1)
+    y = '1356'
+    subprocess.call(['adb', 'shell', 'input', 'tap', '280', y])
+    time.sleep(0.3)
+    subprocess.call(['adb', 'shell', 'input', 'tap', '790', y])
+    time.sleep(0.3)
     
     subprocess.call(['adb', 'shell', 'input', 'tap', '280', '1904'])
-    time.sleep(1)
+    time.sleep(0.3)
     subprocess.call(['adb', 'shell', 'input', 'tap', '790', '1904'])
-    time.sleep(1)
+    time.sleep(0.3)
     
-    #delete
+    #press delete and confirm it
     subprocess.call(['adb', 'shell', 'input', 'tap', '500', '2133'])
     time.sleep(1)
     subprocess.call(['adb', 'shell', 'input', 'tap', '500', '1314'])

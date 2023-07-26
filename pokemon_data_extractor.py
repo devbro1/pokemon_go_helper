@@ -17,6 +17,9 @@ def main():
     for i in range(0,1600):
         current_name =  'screenshots\\pokemon_' + str(i) + '.png'
         screen_reader.takeScreenshot(current_name)
+        ivs = screen_reader.readIVs()
+        if(ivs == (-1,-1,-1)):
+            break
         # pokemon = screen_reader.getPokemon()
         # new_name = 'screenshots\\' + pokemon['name'] + '_' + pokemon['cp'] + '.png'
         # os.rename(current_name, new_name)

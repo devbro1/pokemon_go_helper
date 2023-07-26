@@ -4,44 +4,39 @@ pokedex = Pokedex()
 
 
 class Pokemon:
-    def __init__(self, details):
+    def __init__(self, name,attack,defense,stamina,cp=0):
 
-        self.name = details['name']
-        self.cp = int(details['cp'])
-        self.attack = details['attack']
-        self.defense = details['defense']
-        self.health = details['health']
-        self.hp = details['hp']
+        self.name = name
+        self.cp = cp
+        self.attack = attack
+        self.defense = defense
+        self.stamina = stamina
 
         family_details = pokedex.findPokemon(self.name)
         if (family_details):
             self.family = family_details
-            self.ind_attack = family_details['stats']['atk'] + details['attack']
-            self.ind_defense = family_details['stats']['def'] + details['defense']
-            self.ind_health = family_details['stats']['sta'] + details['health']
+            self.ind_attack = family_details['stats']['atk'] + self.attack
+            self.ind_defense = family_details['stats']['def'] + self.defense
+            self.ind_stamina = family_details['stats']['sta'] + self.stamina
         else:
-            print("family not found: " + self.name)
+            raise LookupError('Family not found')
         self.stat_prod = self.calculateStatProd()
         self.iv_percentage = self.calculateIVPercentage()
         # self.level = False
         
-        self.sp_little = self.getBestLittleLeagueStatProd()['stat_prod']
-        self.sp_great = self.getBestGreatLeagueStatProd()['stat_prod']
-        self.sp_ultra = self.getBestUltraLeagueStatProd()['stat_prod']
-        
-        try:
-            self.cp = int(self.cp)
-        except:
-            self.cp = 0
+        # self.sp_little = self.getBestLittleLeagueStatProd()['stat_prod']
+        # self.sp_great = self.getBestGreatLeagueStatProd()['stat_prod']
+        # self.sp_ultra = self.getBestUltraLeagueStatProd()['stat_prod']
+
             
     def toArray(self):
-        return (self.name, self.cp, self.attack, self.defense, self.health, self.iv_percentage, self.stat_prod, self.sp_little, self.sp_great, self.sp_ultra)
+        return (self.name, self.cp, self.attack, self.defense, self.stamina, self.iv_percentage, self.stat_prod, self.sp_little, self.sp_great, self.sp_ultra)
 
     def calculateIVPercentage(self):
-        return (self.attack + self.defense + self.health) / 45.0
+        return (self.attack + self.defense + self.stamina) / 45.0
 
     def calculateStatProd(self):
-        return self.ind_attack * self.ind_defense * self.ind_health
+        return self.ind_attack * self.ind_defense * self.ind_stamina
 
     def getBestLittleLeagueStatProd(self):
         return self.getBestLeagueStatProd(500)
@@ -55,16 +50,14 @@ class Pokemon:
     def getBestLeagueStatProd(self,maxCP):
         if(self.cp > maxCP):
             return {'stat_prod': -1}
-        
-        rc = pokedex.getBest(self.name,maxCP,self.attack,self.defense,self.health)
-        if rc == None:
-            return rc
 
         matrix = pokedex.getProdStatMax(self.name,maxCP)
+        
+        rc={}
         index=0
         c = len(matrix)
         for m in matrix:
-            if(m['attack']==self.attack and m['defense'] == self.defense and m['health'] == self.health):
+            if(m['attack']==self.attack and m['defense'] == self.defense and m['health'] == self.stamina):
                 rc['percentile'] = (c - index) / c
                 rc['rank'] = index
                 rc['count'] = c
